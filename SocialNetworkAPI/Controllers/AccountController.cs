@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetworkBLL.Models;
 
 namespace SocialNetworkAPI.Controllers
 {
@@ -22,14 +24,14 @@ namespace SocialNetworkAPI.Controllers
             this.signInManager = signInManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Register()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Register()
+        //{
+        //    return View();
+        //}
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] Register model)
         {
             if (ModelState.IsValid)
             {
@@ -57,5 +59,39 @@ namespace SocialNetworkAPI.Controllers
             }
             return View(model);
         }
+
+        //Método que faz o Logout
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
+
+        //Actions para Fazer o Login
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(
+                    model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                ModelState.AddModelError(string.Empty, "Login Inválido");
+            }
+            return View(model);
+        }
+
     }
 }

@@ -30,8 +30,13 @@ namespace SocialNetworkAPI
             services.AddDbContext<SocialNetworkContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                         .AddEntityFrameworkStores<SocialNetworkContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+           .AddEntityFrameworkStores<SocialNetworkContext>();
 
             services.AddControllers();            
         }
