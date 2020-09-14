@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkDLL;
+using Microsoft.AspNetCore.Identity;
 
 namespace SocialNetworkAPI
 {
@@ -27,8 +28,10 @@ namespace SocialNetworkAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SocialNetworkContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));          
+                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                         .AddEntityFrameworkStores<SocialNetworkContext>();
 
             services.AddControllers();            
         }
@@ -44,6 +47,8 @@ namespace SocialNetworkAPI
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

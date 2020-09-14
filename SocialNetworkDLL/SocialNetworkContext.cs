@@ -8,10 +8,11 @@ using SocialNetworkBLL.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.Design;
 using System.IO;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace SocialNetworkDLL
 {
-    public class SocialNetworkContext : DbContext
+    public class SocialNetworkContext : IdentityDbContext
     {
         public SocialNetworkContext(DbContextOptions<SocialNetworkContext> options) : base(options)
         {
