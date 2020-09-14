@@ -12,13 +12,16 @@ namespace SocialNetworkBLL.Models
         public int PostId { get; set; }
         public string Tipo { get; set; }
         public string Corpo { get; set; }
-        public DateTime DataPost { get; set; }       
+        public DateTime DataPost { get; set; } 
 
+        //
+        public int ComentarioId { get; set; }        
         public IEnumerable<Comentario> Comentarios { get; set; }
 
         [ForeignKey("Perfil")]
         public int PerfilId { get; set; }
         public Perfil Perfil { get; set; }
+
        
     }
 }
