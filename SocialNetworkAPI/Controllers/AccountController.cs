@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetworkBLL.Identity;
 using SocialNetworkBLL.Models;
 
 namespace SocialNetworkAPI.Controllers
@@ -57,7 +58,7 @@ namespace SocialNetworkAPI.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View(model);
+            return Ok();
         }
 
         //Método que faz o Logout
@@ -73,12 +74,12 @@ namespace SocialNetworkAPI.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            return NoContent();
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(Login model)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +91,7 @@ namespace SocialNetworkAPI.Controllers
                 }
                 ModelState.AddModelError(string.Empty, "Login Inválido");
             }
-            return View(model);
+            return Ok();
         }
 
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SocialNetworkBLL.Identity
 {
-    class Register
+    public class Register
     {
         [Required]
         [EmailAddress]

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SocialNetworkBLL.Identity
 {
-    class Login
+    public class Login
     {
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]
