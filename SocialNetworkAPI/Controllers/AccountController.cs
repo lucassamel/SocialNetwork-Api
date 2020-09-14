@@ -49,7 +49,7 @@ namespace SocialNetworkAPI.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    return Ok();
                 }
                 // Se houver erros então inclui no ModelState
                 // que será exibido pela tag helper summary na validação
@@ -58,7 +58,7 @@ namespace SocialNetworkAPI.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return Ok();
+            return Created(string.Empty, string.Empty);
         }
 
         //Método que faz o Logout
@@ -66,16 +66,16 @@ namespace SocialNetworkAPI.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("index", "home");
+            return Ok();
         }
 
         //Actions para Fazer o Login
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return NoContent();
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    return NoContent();
+        //}
 
         [AllowAnonymous]
         [HttpPost]
@@ -87,11 +87,11 @@ namespace SocialNetworkAPI.Controllers
                     model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("index", "home");
+                    return Ok();
                 }
                 ModelState.AddModelError(string.Empty, "Login Inválido");
             }
-            return Ok();
+            return NoContent();
         }
 
     }
