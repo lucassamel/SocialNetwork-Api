@@ -32,9 +32,11 @@ namespace SocialNetworkAPI
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                options.Password.RequiredLength = 10;
-                options.Password.RequiredUniqueChars = 3;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
             })
            .AddEntityFrameworkStores<SocialNetworkContext>();
 
