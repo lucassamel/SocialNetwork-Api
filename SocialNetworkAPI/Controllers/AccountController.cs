@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,13 +25,8 @@ namespace SocialNetworkAPI.Controllers
             this.signInManager = signInManager;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Register()
-        //{
-        //    return View();
-        //}
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
             if (ModelState.IsValid)
@@ -62,23 +57,16 @@ namespace SocialNetworkAPI.Controllers
         }
 
         //Método que faz o Logout
-        [HttpPost]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return Ok();
         }
 
-        //Actions para Fazer o Login
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public IActionResult Login()
-        //{
-        //    return NoContent();
-        //}
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(Login model)
         {
             if (ModelState.IsValid)
