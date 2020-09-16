@@ -27,7 +27,7 @@ namespace SocialNetworkAPI.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register model)
+        public async Task<IActionResult> Register([FromForm] Register model)
         {
             // Copia os dados do RegisterViewModel para o IdentityUser
             var user = new IdentityUser
@@ -46,7 +46,7 @@ namespace SocialNetworkAPI.Controllers
             }
             // Se houver erros então inclui no ModelState
             // que será exibido pela tag helper summary na validação
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);  
+            return StatusCode(StatusCodes.Status400BadRequest, result.Errors);  
         }
 
         //Método que faz o Logout
@@ -60,19 +60,16 @@ namespace SocialNetworkAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(Login model)
+        public async Task<IActionResult> Login([FromForm] Login model)
         {
-            if (ModelState.IsValid)
+            var result = await signInManager.PasswordSignInAsync(
+                model.Email, model.Password, model.RememberMe, false);
+            if (!result.Succeeded)
             {
-                var result = await signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
-                ModelState.AddModelError(string.Empty, "Login Inválido");
+                return StatusCode(StatusCodes.Status400BadRequest, "Login Inválido");
             }
-            return NoContent();
+            
+            return Ok();
         }
 
     }
