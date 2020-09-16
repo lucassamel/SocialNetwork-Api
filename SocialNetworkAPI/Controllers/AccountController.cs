@@ -27,7 +27,7 @@ namespace SocialNetworkAPI.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] Register model)
+        public async Task<IActionResult> Register([FromBody] Register model)
         {
             // Copia os dados do RegisterViewModel para o IdentityUser
             var user = new IdentityUser
@@ -60,7 +60,7 @@ namespace SocialNetworkAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] Login model)
+        public async Task<IActionResult> Login([FromBody] Login model)
         {
             var result = await signInManager.PasswordSignInAsync(
                 model.Email, model.Password, model.RememberMe, false);
