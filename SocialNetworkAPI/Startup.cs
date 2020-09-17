@@ -40,7 +40,9 @@ namespace SocialNetworkAPI
             })
            .AddEntityFrameworkStores<SocialNetworkContext>();
 
-            services.AddControllers();            
+            services.AddControllers();
+            
+            services.AddCors();
         }
 
         
@@ -54,6 +56,12 @@ namespace SocialNetworkAPI
             }
 
             app.UseRouting();
+
+            app.UseCors(builder => builder
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());  
 
             app.UseAuthentication();
 
