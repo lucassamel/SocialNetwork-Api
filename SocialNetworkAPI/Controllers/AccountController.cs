@@ -47,6 +47,7 @@ namespace SocialNetworkAPI.Controllers
             {
                 Nome = model.Nome,
                 Sobrenome = model.Sobrenome,
+                Email = model.Email,
                 Aniversario = model.Aniversario,
                 Localidade = model.Localidade
             };
