@@ -9,9 +9,13 @@ namespace SocialNetworkBLL.Models
     {
         [Key]
         public int UsuarioId { get; set; }
+        
+        [Required]
         public string Nome { get; set; }
+        
+        [Required]
         public string Sobrenome { get; set; }
-        //public string Email { get; set; }
+        
         public DateTime Aniversario { get; set; }
         public string Localidade { get; set; }
     }
