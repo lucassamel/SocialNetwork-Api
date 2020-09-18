@@ -22,6 +22,9 @@ namespace SocialNetworkBLL.Models
         public int PerfilId { get; set; }
         public Perfil Perfil { get; set; }
 
-       
+        [ForeignKey("FileData")]
+        public int FileDataId { get; set; }
+        public FileData FileData { get; set; }
+
     }
 }

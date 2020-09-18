@@ -24,7 +24,5 @@ namespace SocialNetworkBLL.Models
 
         public DateTime Aniversario { get; set; }
         public string Localidade { get; set; }
-
-        
     }
 }
