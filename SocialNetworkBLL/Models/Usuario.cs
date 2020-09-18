@@ -17,13 +17,14 @@ namespace SocialNetworkBLL.Models
         
         [Required]
         public string Sobrenome { get; set; }
-        
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
         public DateTime Aniversario { get; set; }
         public string Localidade { get; set; }
 
-        [Required]
-        [ForeignKey("Register")]
-        public int RegisterId { get; set; }
-        public Register Register { get; set; }
+        
     }
 }
