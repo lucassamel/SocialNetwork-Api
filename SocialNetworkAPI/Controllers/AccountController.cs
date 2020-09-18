@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialNetworkBLL.Identity;
 using SocialNetworkBLL.Models;
 using SocialNetworkBLL.Requests;
+using SocialNetworkDLL;
 
 namespace SocialNetworkAPI.Controllers
 {
@@ -16,6 +17,8 @@ namespace SocialNetworkAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly SocialNetworkContext _context;
+
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
@@ -38,12 +41,25 @@ namespace SocialNetworkAPI.Controllers
             };
             // Armazena os dados do usuário na tabela AspNetUsers
             var result = await userManager.CreateAsync(user, model.Password);
+
+            // Copia os dados do RegisterModel para a tabela Usuario
+            var usuario = new Usuario
+            {
+                Nome = model.Nome,
+                Sobrenome = model.Sobrenome,
+                Aniversario = model.Aniversario,
+                Localidade = model.Localidade
+            };
+            
+
             // Se o usuário foi criado com sucesso, faz o login do usuário
             // usando o serviço SignInManager e redireciona para o Método Action Index
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
-                return Ok();
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+                return Ok(usuario);
             }
             // Se houver erros então inclui no ModelState
             // que será exibido pela tag helper summary na validação
