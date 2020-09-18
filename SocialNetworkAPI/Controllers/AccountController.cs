@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkBLL.Identity;
 using SocialNetworkBLL.Models;
+using SocialNetworkBLL.Requests;
 
 namespace SocialNetworkAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace SocialNetworkAPI.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             // Copia os dados do RegisterViewModel para o IdentityUser
             var user = new IdentityUser
