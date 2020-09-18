@@ -20,6 +20,12 @@ namespace SocialNetworkAPI.Controllers
     {
         private readonly SocialNetworkContext _context;
 
+        public AccountController(SocialNetworkContext context)
+        {
+            _context = context;        
+        }
+
+
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
@@ -32,7 +38,7 @@ namespace SocialNetworkAPI.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
+        public async Task<ActionResult> Register([FromBody] RegisterRequest model)
         {
             // Copia os dados do RegisterViewModel para o IdentityUser
             var user = new IdentityUser
@@ -52,6 +58,8 @@ namespace SocialNetworkAPI.Controllers
                 Aniversario = model.Aniversario,
                 Localidade = model.Localidade
             };
+
+            
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
@@ -83,7 +91,7 @@ namespace SocialNetworkAPI.Controllers
         public async Task<IActionResult> Login([FromBody] Login model)
         {
             var usuario = new List<Usuario>();
-
+        
             usuario = _context.Usuarios.FromSqlRaw("EXEC GetUsuarioEmail @Email", model.Email).ToList();
 
             var result = await signInManager.PasswordSignInAsync(
