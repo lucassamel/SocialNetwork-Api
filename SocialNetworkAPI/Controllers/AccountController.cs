@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SocialNetworkBLL.Identity;
 using SocialNetworkBLL.Models;
 using SocialNetworkBLL.Requests;
@@ -51,15 +52,16 @@ namespace SocialNetworkAPI.Controllers
                 Aniversario = model.Aniversario,
                 Localidade = model.Localidade
             };
-            
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
 
             // Se o usuário foi criado com sucesso, faz o login do usuário
             // usando o serviço SignInManager e redireciona para o Método Action Index
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
+                
+
                 return Ok(usuario);
             }
             // Se houver erros então inclui no ModelState
@@ -80,6 +82,10 @@ namespace SocialNetworkAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
+            var usuario = new List<Usuario>();
+
+            usuario = _context.Usuarios.FromSqlRaw("EXEC GetUsuarioEmail @Email", model.Email).ToList();
+
             var result = await signInManager.PasswordSignInAsync(
                 model.Email, model.Password, model.RememberMe, false);
             if (!result.Succeeded)
@@ -87,7 +93,7 @@ namespace SocialNetworkAPI.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, "Login Inválido");
             }
             
-            return Ok();
+            return Ok(usuario);
         }
 
     }
