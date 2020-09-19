@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace SocialNetworkAPI.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _context = context;        
+            _context = context;    
         }
 
 
@@ -87,16 +87,14 @@ namespace SocialNetworkAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
-            var usuario = new List<Usuario>();
-        
-            usuario = _context.Usuarios.FromSqlRaw("EXEC GetUsuarioEmail @Email", model.Email).ToList();
-
-            var result = await signInManager.PasswordSignInAsync(
+            var result = await _signInManager.PasswordSignInAsync(
                 model.Email, model.Password, model.RememberMe, false);
             if (!result.Succeeded)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, "Login Inválido");
             }
+
+            var usuario = _context.Usuarios.Single(u => u.Email == model.Email);
             
             return Ok(usuario);
         }
