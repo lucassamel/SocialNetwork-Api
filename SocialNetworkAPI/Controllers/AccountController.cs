@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,21 +19,18 @@ namespace SocialNetworkAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly SocialNetworkContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AccountController(SocialNetworkContext context)
+        public AccountController(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            SocialNetworkContext context
+        )
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;        
-        }
-
-
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
-
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
-        {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
         }
 
 
@@ -47,7 +44,7 @@ namespace SocialNetworkAPI.Controllers
                 Email = model.Email
             };
             // Armazena os dados do usuário na tabela AspNetUsers
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             // Copia os dados do RegisterModel para a tabela Usuario
             var usuario = new Usuario
@@ -67,7 +64,7 @@ namespace SocialNetworkAPI.Controllers
             // usando o serviço SignInManager e redireciona para o Método Action Index
             if (result.Succeeded)
             {
-                await signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 
 
                 return Ok(usuario);
@@ -81,7 +78,7 @@ namespace SocialNetworkAPI.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return Ok();
         }
 
