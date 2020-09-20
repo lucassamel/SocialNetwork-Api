@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace SocialNetworkBLL.Models
@@ -13,11 +15,12 @@ namespace SocialNetworkBLL.Models
         public string Tipo { get; set; }
         public string Corpo { get; set; }
         public DateTime DataPost { get; set; }
-        public int Fato { get; set; }
-        public int Fake { get; set; }
 
-        //
-        public int ComentarioId { get; set; }        
+        [DefaultValue(0)]
+        public int CountFato { get; set; }
+        [DefaultValue(0)]
+        public int CountFake { get; set; }
+            
         public IEnumerable<Comentario> Comentarios { get; set; }
 
         [ForeignKey("Perfil")]

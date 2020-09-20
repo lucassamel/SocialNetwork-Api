@@ -3,10 +3,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SocialNetworkDLL.Migrations
 {
-    public partial class AdicionarIdentity : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Amizades",
+                columns: table => new
+                {
+                    AmizadeId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Usuario = table.Column<int>(nullable: false),
+                    Amigo = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Amizades", x => x.AmizadeId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -44,6 +58,23 @@ namespace SocialNetworkDLL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    UsuarioId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(nullable: false),
+                    Sobrenome = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Aniversario = table.Column<DateTime>(nullable: true),
+                    Localidade = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.UsuarioId);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +183,107 @@ namespace SocialNetworkDLL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FileDatas",
+                columns: table => new
+                {
+                    FileDataId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(nullable: true),
+                    FileSize = table.Column<string>(nullable: true),
+                    ModifiedOn = table.Column<string>(nullable: true),
+                    UsuarioId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileDatas", x => x.FileDataId);
+                    table.ForeignKey(
+                        name: "FK_FileDatas_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Perfis",
+                columns: table => new
+                {
+                    PerfilId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Privado = table.Column<bool>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    PerfilId1 = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Perfis", x => x.PerfilId);
+                    table.ForeignKey(
+                        name: "FK_Perfis_Perfis_PerfilId1",
+                        column: x => x.PerfilId1,
+                        principalTable: "Perfis",
+                        principalColumn: "PerfilId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Perfis_Usuarios_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Tipo = table.Column<string>(nullable: true),
+                    Corpo = table.Column<string>(nullable: true),
+                    DataPost = table.Column<DateTime>(nullable: false),
+                    CountFato = table.Column<int>(nullable: false),
+                    CountFake = table.Column<int>(nullable: false),
+                    PerfilId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.PostId);
+                    table.ForeignKey(
+                        name: "FK_Posts_Perfis_PerfilId",
+                        column: x => x.PerfilId,
+                        principalTable: "Perfis",
+                        principalColumn: "PerfilId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comentarios",
+                columns: table => new
+                {
+                    ComentarioId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Coment = table.Column<string>(nullable: true),
+                    Data = table.Column<DateTime>(nullable: false),
+                    PostId = table.Column<int>(nullable: false),
+                    UsuarioId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comentarios", x => x.ComentarioId);
+                    table.ForeignKey(
+                        name: "FK_Comentarios_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Comentarios_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,10 +322,43 @@ namespace SocialNetworkDLL.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comentarios_PostId",
+                table: "Comentarios",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comentarios_UsuarioId",
+                table: "Comentarios",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileDatas_UsuarioId",
+                table: "FileDatas",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Perfis_PerfilId1",
+                table: "Perfis",
+                column: "PerfilId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Perfis_UserId",
+                table: "Perfis",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_PerfilId",
+                table: "Posts",
+                column: "PerfilId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Amizades");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -210,10 +375,25 @@ namespace SocialNetworkDLL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comentarios");
+
+            migrationBuilder.DropTable(
+                name: "FileDatas");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Perfis");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

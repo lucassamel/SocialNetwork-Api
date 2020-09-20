@@ -11,10 +11,14 @@ namespace SocialNetworkBLL.Models
         [Key]
         public int ComentarioId { get; set; }
         public string Coment { get; set; }
-        public DateTime Data { get; set; }        
+        public DateTime Data { get; set; }     
+        
+        [ForeignKey("Post")]
+        public int PostId { get; set; }
+        public Post Post { get; set; }
 
         [ForeignKey("Perfil")]
-        public int UsuarioId { get; set; }
-        public Usuario Usuario { get; set; }
+        public int PerfilId { get; set; }
+        public Perfil Perfil { get; set; }
     }
 }

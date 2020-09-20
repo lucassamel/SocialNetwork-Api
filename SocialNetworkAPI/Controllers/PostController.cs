@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkBLL.Models;
@@ -17,10 +18,13 @@ namespace SocialNetworkAPI.Controllers
     public class PostController : ControllerBase
     {
         private readonly SocialNetworkContext _context;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public PostController(SocialNetworkContext context)
+        public PostController(SocialNetworkContext context,
+            SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
         }
 
         // GET: api/Post
@@ -76,16 +80,19 @@ namespace SocialNetworkAPI.Controllers
             }
 
             return NoContent();
-        }
+        }     
+
 
         // POST: api/Post
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Post>> PostPost(Post post, int id)
         {
+            post.PerfilId = id;
+            post.DataPost = DateTime.Now;
             _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();            
 
             return CreatedAtAction("GetPost", new { id = post.PostId }, post);
         }

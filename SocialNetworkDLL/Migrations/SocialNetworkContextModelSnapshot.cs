@@ -215,6 +215,24 @@ namespace SocialNetworkDLL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SocialNetworkBLL.Models.Amizade", b =>
+                {
+                    b.Property<int>("AmizadeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Amigo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Usuario")
+                        .HasColumnType("int");
+
+                    b.HasKey("AmizadeId");
+
+                    b.ToTable("Amizades");
+                });
+
             modelBuilder.Entity("SocialNetworkBLL.Models.Comentario", b =>
                 {
                     b.Property<int>("ComentarioId")
@@ -228,24 +246,24 @@ namespace SocialNetworkDLL.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PostId")
+                    b.Property<int>("PerfilId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.HasKey("ComentarioId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("PerfilId");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comentarios");
                 });
 
             modelBuilder.Entity("SocialNetworkBLL.Models.FileData", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FileDataId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -262,11 +280,11 @@ namespace SocialNetworkDLL.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("FileDataId");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("FileData");
+                    b.ToTable("FileDatas");
                 });
 
             modelBuilder.Entity("SocialNetworkBLL.Models.Perfil", b =>
@@ -301,17 +319,17 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ComentarioId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Corpo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CountFake")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountFato")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DataPost")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("FileDataId")
-                        .HasColumnType("int");
 
                     b.Property<int>("PerfilId")
                         .HasColumnType("int");
@@ -320,8 +338,6 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostId");
-
-                    b.HasIndex("FileDataId");
 
                     b.HasIndex("PerfilId");
 
@@ -411,13 +427,15 @@ namespace SocialNetworkDLL.Migrations
 
             modelBuilder.Entity("SocialNetworkBLL.Models.Comentario", b =>
                 {
-                    b.HasOne("SocialNetworkBLL.Models.Post", null)
-                        .WithMany("Comentarios")
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("SocialNetworkBLL.Models.Usuario", "Usuario")
+                    b.HasOne("SocialNetworkBLL.Models.Perfil", "Perfil")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
+                        .HasForeignKey("PerfilId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SocialNetworkBLL.Models.Post", "Post")
+                        .WithMany("Comentarios")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -446,12 +464,6 @@ namespace SocialNetworkDLL.Migrations
 
             modelBuilder.Entity("SocialNetworkBLL.Models.Post", b =>
                 {
-                    b.HasOne("SocialNetworkBLL.Models.FileData", "FileData")
-                        .WithMany()
-                        .HasForeignKey("FileDataId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SocialNetworkBLL.Models.Perfil", "Perfil")
                         .WithMany()
                         .HasForeignKey("PerfilId")

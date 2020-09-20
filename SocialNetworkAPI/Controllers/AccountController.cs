@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using SocialNetworkBLL.Identity;
@@ -106,8 +107,11 @@ namespace SocialNetworkAPI.Controllers
             }
 
             var usuario = _context.Usuarios.Single(u => u.Email == model.Email);
+
+            var usuarioId = new SqlParameter("@UsuarioId", usuario.UsuarioId);
+            var amizades = _context.Amizades.FromSqlRaw("EXEC ListAmigo @UsuarioId", usuarioId).ToList();
             
-            return Ok(usuario);
+            return Ok(new object[] {usuario,amizades});
         }
 
     }

@@ -22,6 +22,8 @@ namespace SocialNetworkDLL
             public virtual DbSet<Comentario> Comentarios { get; set; }
             public virtual DbSet<Perfil> Perfis { get; set; }
             public virtual DbSet<Post> Posts { get; set; }
+            public virtual DbSet<FileData> FileDatas { get; set; }
+            public virtual DbSet<Amizade> Amizades { get; set; }
 
         public class DesingTimeDbContextFactory : IDesignTimeDbContextFactory<SocialNetworkContext>
         {

@@ -9,7 +9,7 @@ namespace SocialNetworkBLL.Models
     public class FileData
     {
         [Key]
-        public int Id { get; set; }
+        public int FileDataId { get; set; }
         public string FileName { get; set; }
         public string FileSize { get; set; }
         public string ModifiedOn { get; set; }
