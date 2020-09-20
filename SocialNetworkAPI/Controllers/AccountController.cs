@@ -105,7 +105,9 @@ namespace SocialNetworkAPI.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, "Login Inválido");
             }
 
-            var usuario = _context.Usuarios.Single(u => u.Email == model.Email);
+            var usuario = _context.Usuarios
+                .Include(u =>u.Perfil)
+                .Single(u => u.Email == model.Email);
             
             return Ok(usuario);
         }

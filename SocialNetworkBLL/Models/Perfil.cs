@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SocialNetworkBLL.Models
 {
@@ -15,6 +16,7 @@ namespace SocialNetworkBLL.Models
 
         [ForeignKey("Usuario")]
         public int UserId { get; set; }
+        [JsonIgnore]
         public Usuario Usuario { get; set; }
     }
 }
