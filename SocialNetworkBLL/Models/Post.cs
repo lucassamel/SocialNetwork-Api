@@ -12,7 +12,9 @@ namespace SocialNetworkBLL.Models
         public int PostId { get; set; }
         public string Tipo { get; set; }
         public string Corpo { get; set; }
-        public DateTime DataPost { get; set; } 
+        public DateTime DataPost { get; set; }
+        public int Fato { get; set; }
+        public int Fake { get; set; }
 
         //
         public int ComentarioId { get; set; }        
@@ -20,11 +22,7 @@ namespace SocialNetworkBLL.Models
 
         [ForeignKey("Perfil")]
         public int PerfilId { get; set; }
-        public Perfil Perfil { get; set; }
-
-        [ForeignKey("FileData")]
-        public int FileDataId { get; set; }
-        public FileData FileData { get; set; }
+        public Perfil Perfil { get; set; }  
 
     }
 }
