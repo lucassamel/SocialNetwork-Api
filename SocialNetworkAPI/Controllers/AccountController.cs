@@ -108,13 +108,10 @@ namespace SocialNetworkAPI.Controllers
 
             var usuario = _context.Usuarios
                 .Include(u =>u.Perfil)
+                .Include(u => u.Perfil.Amizades)
                 .Single(u => u.Email == model.Email);
 
-            var usuarioId = new SqlParameter("@UsuarioId", usuario.UsuarioId);
-            var amizades = _context.Amizades.FromSqlRaw("EXEC ListAmigo @UsuarioId", usuarioId).ToList();
-            
-            
-            return Ok(new object[] {usuario,amizades});
+            return Ok(usuario);
         }
 
     }
