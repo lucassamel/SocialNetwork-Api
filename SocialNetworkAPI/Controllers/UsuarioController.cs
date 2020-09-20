@@ -35,7 +35,9 @@ namespace SocialNetworkAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = await _context.Usuarios
+                .Include(u => u.Perfil)
+                .FirstAsync(u => u.UsuarioId == id);
 
             if (usuario == null)
             {
