@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using SocialNetworkBLL.Identity;
 using SocialNetworkBLL.Models;
 using SocialNetworkBLL.Requests;
@@ -58,6 +59,16 @@ namespace SocialNetworkAPI.Controllers
 
             
             _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+
+
+            var perfil = new Perfil
+            {
+                Privado = false,
+                UserId = usuario.UsuarioId
+            };
+
+            _context.Perfis.Add(perfil);
             await _context.SaveChangesAsync();
 
             // Se o usuário foi criado com sucesso, faz o login do usuário
