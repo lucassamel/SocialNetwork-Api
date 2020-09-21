@@ -112,18 +112,18 @@ namespace SocialNetworkAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("")]
-        public async Task<IActionResult> Delete(string blobName)
-        {
-            string blobstorageconnection = _configuration.GetValue<string>("blobstorage");
-            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
-            CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            string strContainerName = "imagens";
-            CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
-            var blob = cloudBlobContainer.GetBlobReference(blobName);
-            await blob.DeleteIfExistsAsync();
-            return RedirectToAction("Galeria", "Demo");
-        }
+        // [HttpDelete("")]
+        // public async Task<IActionResult> Delete(string blobName)
+        // {
+        //     string blobstorageconnection = _configuration.GetValue<string>("blobstorage");
+        //     CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
+        //     CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+        //     string strContainerName = "imagens";
+        //     CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
+        //     var blob = cloudBlobContainer.GetBlobReference(blobName);
+        //     await blob.DeleteIfExistsAsync();
+        //     return RedirectToAction("Galeria", "Demo");
+        // }
 
 
     }

@@ -129,6 +129,7 @@ namespace SocialNetworkAPI.Controllers
             {
                 return NotFound();
             }
+            
 
             var account = await _userManager.GetUserAsync(this.User);
 
@@ -137,6 +138,11 @@ namespace SocialNetworkAPI.Controllers
                 .Include(p => p.Seguidores)
                 .FirstAsync(p => p.Usuario.Email == account.Email);
 
+            if (perfilLogado.PerfilId == id)
+            {
+                return perfilLogado;
+            }
+            
             // perfil ja seguiu entao nem precisa adionar
             if (perfilLogado.Seguindo != null && perfilLogado.Seguindo.Any(a => a.PerfilSeguido.PerfilId == id))
             {
@@ -150,6 +156,38 @@ namespace SocialNetworkAPI.Controllers
             };
             
             await _context.Amizades.AddAsync(novaAmizade);            
+            await _context.SaveChangesAsync();
+
+            return perfilLogado;
+        }
+        
+        // GET: api/Perfil/5
+        [Authorize]
+        [Microsoft.AspNetCore.Mvc.HttpPost("{id}/parar-de-seguir")]
+        public async Task<ActionResult<Perfil>> PararSeguir(int id)
+        {
+            var account = await _userManager.GetUserAsync(this.User);
+
+            var perfilLogado = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
+                .FirstAsync(p => p.Usuario.Email == account.Email);
+
+            if (perfilLogado.PerfilId == id)
+            {
+                return perfilLogado;
+            }
+            
+            var amizade = perfilLogado
+                .Seguindo
+                .FirstOrDefault(a => a.PerfilSeguidoId == id);
+
+            if (amizade == null)
+            {
+                return perfilLogado;    
+            }
+
+            _context.Amizades.Remove(amizade);
             await _context.SaveChangesAsync();
 
             return perfilLogado;
