@@ -46,7 +46,7 @@ namespace SocialNetworkAPI.Services
                 await blockBlob.UploadFromStreamAsync(data);                
             }
 
-            var blobUri = new Uri(container.Uri +
+            var blobUri = new Uri(container.Uri +"/"+
                           systemFileName
                           ).ToString();
 

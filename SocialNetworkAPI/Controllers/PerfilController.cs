@@ -177,6 +177,23 @@ namespace SocialNetworkAPI.Controllers
                 perfilSeguido = perfil, perfilLogado
             });
         }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost("{id}/foto-perfil")]
+        public async Task<ActionResult<Perfil>> ImagemPerfil(IFormFile files, int id)
+        {
+            var perfil = await _context.Perfis.FindAsync(id);
+
+            if(perfil == null)
+            {
+                return NotFound();
+            }
+
+            perfil.ImagemPerfil = await _ImageService.ImagemPerfil(files,perfil);
+            
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
         
         // GET: api/Perfil/5
         [Authorize]
