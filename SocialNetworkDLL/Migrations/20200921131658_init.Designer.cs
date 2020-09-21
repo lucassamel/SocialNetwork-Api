@@ -10,8 +10,8 @@ using SocialNetworkDLL;
 namespace SocialNetworkDLL.Migrations
 {
     [DbContext(typeof(SocialNetworkContext))]
-    [Migration("20200921003719_amizade")]
-    partial class amizade
+    [Migration("20200921131658_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -224,17 +224,17 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PerfilAmigoId")
+                    b.Property<int>("PerfilId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PerfilUsuarioId")
+                    b.Property<int>("PerfilSeguidoId")
                         .HasColumnType("int");
 
                     b.HasKey("AmizadeId");
 
-                    b.HasIndex("PerfilAmigoId");
+                    b.HasIndex("PerfilId");
 
-                    b.HasIndex("PerfilUsuarioId");
+                    b.HasIndex("PerfilSeguidoId");
 
                     b.ToTable("Amizades");
                 });
@@ -300,9 +300,6 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("PerfilId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Privado")
                         .HasColumnType("bit");
 
@@ -310,8 +307,6 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PerfilId");
-
-                    b.HasIndex("PerfilId1");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -434,16 +429,16 @@ namespace SocialNetworkDLL.Migrations
 
             modelBuilder.Entity("SocialNetworkBLL.Models.Amizade", b =>
                 {
-                    b.HasOne("SocialNetworkBLL.Models.Perfil", "PerfilAmigo")
-                        .WithMany()
-                        .HasForeignKey("PerfilAmigoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SocialNetworkBLL.Models.Perfil", "Perfil")
+                        .WithMany("Seguindo")
+                        .HasForeignKey("PerfilId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SocialNetworkBLL.Models.Perfil", "PerfilUsuario")
-                        .WithMany()
-                        .HasForeignKey("PerfilUsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SocialNetworkBLL.Models.Perfil", "PerfilSeguido")
+                        .WithMany("Seguidores")
+                        .HasForeignKey("PerfilSeguidoId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -452,7 +447,7 @@ namespace SocialNetworkDLL.Migrations
                     b.HasOne("SocialNetworkBLL.Models.Perfil", "Perfil")
                         .WithMany()
                         .HasForeignKey("PerfilId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SocialNetworkBLL.Models.Post", "Post")
@@ -473,10 +468,6 @@ namespace SocialNetworkDLL.Migrations
 
             modelBuilder.Entity("SocialNetworkBLL.Models.Perfil", b =>
                 {
-                    b.HasOne("SocialNetworkBLL.Models.Perfil", null)
-                        .WithMany("Amizades")
-                        .HasForeignKey("PerfilId1");
-
                     b.HasOne("SocialNetworkBLL.Models.Usuario", "Usuario")
                         .WithOne("Perfil")
                         .HasForeignKey("SocialNetworkBLL.Models.Perfil", "UserId")

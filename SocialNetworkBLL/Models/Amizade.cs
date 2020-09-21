@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SocialNetworkBLL.Models
 {
@@ -12,13 +13,13 @@ namespace SocialNetworkBLL.Models
         [Key]
         public int AmizadeId { get; set; }
 
-        [ForeignKey("Perfil")]
-        public int PerfilUsuarioId { get; set; }
-        public Perfil PerfilUsuario { get; set; }
+        public int PerfilId { get; set; }
+        [JsonIgnore]
+        public Perfil Perfil { get; set; }
 
-        [ForeignKey("Perfil")]
-        public int PerfilAmigoId { get; set; }
-        public Perfil PerfilAmigo { get; set; }
+        public int PerfilSeguidoId { get; set; }
+        [JsonIgnore]
+        public Perfil PerfilSeguido { get; set; }
 
     }
 }
