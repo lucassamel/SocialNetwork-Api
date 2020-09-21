@@ -12,19 +12,14 @@ using System.Threading.Tasks;
 
 namespace SocialNetworkAPI.Services
 {
-    public class ImagemService
+    public class ImagemService : IIMagemService
     {
         private readonly IConfiguration _configuration;
 
         public ImagemService(IConfiguration configuration)
         {
             _configuration = configuration;            
-        }
-
-        public ImagemService()
-        {
-            
-        }       
+        }          
 
         public async Task<String> ImagemPerfil(IFormFile files, Perfil perfilLogado)
         {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SocialNetworkAPI.Services;
 using SocialNetworkBLL.Models;
 using SocialNetworkDLL;
@@ -18,12 +19,16 @@ namespace SocialNetworkAPI.Controllers
     public class PerfilController : ControllerBase
     {
         private readonly SocialNetworkContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;  
+        private readonly IIMagemService _ImageService;
 
-        public PerfilController(SocialNetworkContext context, UserManager<IdentityUser> userManager)
+        public PerfilController(IIMagemService imagemService,
+            SocialNetworkContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+            _ImageService = imagemService;
         }
         
 
@@ -60,12 +65,9 @@ namespace SocialNetworkAPI.Controllers
             if (id != perfil.PerfilId)
             {
                 return BadRequest();
-            }
+            }           
 
-            var imagemService = new ImagemService();
-
-            perfil.ImagemPerfil = imagemService.ImagemPerfil(files,perfil).ToString();
-          
+            perfil.ImagemPerfil = await _ImageService.ImagemPerfil(files,perfil);          
 
             _context.Entry(perfil).State = EntityState.Modified;
 
