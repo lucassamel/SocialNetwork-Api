@@ -68,9 +68,18 @@ namespace SocialNetworkAPI.Controllers
             return Ok();
         }
 
+        
+        //Tras todos os blobs do Usuario logado
         [HttpGet]
         public async Task<IActionResult> ShowAllBlobs()
         {
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Perfis
+                .FirstAsync(p => p.Usuario.Email == account.Email);
+
+            string dir = perfilLogado.PerfilId.ToString() + "/";
+
+
             string blobstorageconnection =
            _configuration.GetValue<string>("blobstorage");
             CloudStorageAccount cloudStorageAccount =
@@ -80,7 +89,7 @@ namespace SocialNetworkAPI.Controllers
             CloudBlobContainer container =
            blobClient.GetContainerReference("imagens");
             CloudBlobDirectory dirb =
-           container.GetDirectoryReference("imagens");
+           container.GetDirectoryReference(dir);
             BlobResultSegment resultSegment = await
            container.ListBlobsSegmentedAsync(string.Empty,
             true, BlobListingDetails.Metadata, 100, null, null, null);
