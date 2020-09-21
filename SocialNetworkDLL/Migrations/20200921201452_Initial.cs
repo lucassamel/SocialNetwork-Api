@@ -242,9 +242,9 @@ namespace SocialNetworkDLL.Migrations
                 {
                     PostId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Tipo = table.Column<string>(nullable: true),
                     Corpo = table.Column<string>(nullable: true),
                     DataPost = table.Column<DateTime>(nullable: false),
+                    Imagem = table.Column<string>(nullable: true),
                     CountFato = table.Column<int>(nullable: false),
                     CountFake = table.Column<int>(nullable: false),
                     PerfilId = table.Column<int>(nullable: false)

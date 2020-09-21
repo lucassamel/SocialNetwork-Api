@@ -10,7 +10,7 @@ using SocialNetworkDLL;
 namespace SocialNetworkDLL.Migrations
 {
     [DbContext(typeof(SocialNetworkContext))]
-    [Migration("20200921134422_Initial")]
+    [Migration("20200921201452_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -336,11 +336,11 @@ namespace SocialNetworkDLL.Migrations
                     b.Property<DateTime>("DataPost")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Imagem")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PerfilId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostId");
 

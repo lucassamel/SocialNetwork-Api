@@ -334,11 +334,11 @@ namespace SocialNetworkDLL.Migrations
                     b.Property<DateTime>("DataPost")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Imagem")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PerfilId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostId");
 

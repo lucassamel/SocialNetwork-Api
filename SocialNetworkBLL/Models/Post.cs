@@ -11,8 +11,7 @@ namespace SocialNetworkBLL.Models
     public class Post
     {
         [Key]
-        public int PostId { get; set; }
-        public string Tipo { get; set; }
+        public int PostId { get; set; }        
         public string Corpo { get; set; }
         public DateTime DataPost { get; set; }
         public string Imagem { get; set; }
