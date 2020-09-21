@@ -181,7 +181,10 @@ namespace SocialNetworkAPI.Controllers
         [Microsoft.AspNetCore.Mvc.HttpPost("{id}/foto-perfil")]
         public async Task<ActionResult<Perfil>> ImagemPerfil(IFormFile files, int id)
         {
-            var perfil = await _context.Perfis.FindAsync(id);
+            var perfil = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
+                .FirstOrDefaultAsync(p => p.PerfilId == id);
 
             if(perfil == null)
             {
@@ -192,7 +195,7 @@ namespace SocialNetworkAPI.Controllers
             
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(perfil);
         }
         
         // GET: api/Perfil/5
