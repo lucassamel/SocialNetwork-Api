@@ -6,6 +6,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using SocialNetworkBLL.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,6 +83,45 @@ namespace SocialNetworkAPI.Services
                           ).ToString();
 
             return (blobUri);
+        }
+
+        [HttpGet]
+        public async Task<List<string>> Galeria(Perfil peril)
+        {
+            string dir = peril.PerfilId.ToString() + "/";
+
+            string blobstorageconnection =
+           _configuration.GetValue<string>("blobstorage");
+            CloudStorageAccount cloudStorageAccount =
+           CloudStorageAccount.Parse(blobstorageconnection);
+            // Create the blob client.
+            CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container =
+           blobClient.GetContainerReference("imagens");
+
+            CloudBlobDirectory dirb =
+           container.GetDirectoryReference(dir);
+
+            BlobResultSegment resultSegment = await
+           container.ListBlobsSegmentedAsync(string.Empty,
+            true, BlobListingDetails.Metadata, 100, null, null, null);
+           
+            var galeria = new List<string>();
+            foreach (var blobItem in resultSegment.Results)
+            {
+                // A flat listing operation returns only blobs, not virtual directories.
+                var blob = (CloudBlob)blobItem;
+                var uri = new Uri(
+                    container.Uri + "/" +
+                    blob.Name
+                    ).ToString();
+
+                galeria.Add(uri);
+
+               
+            }
+
+            return galeria;
         }
 
     }

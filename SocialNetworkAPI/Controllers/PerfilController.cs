@@ -194,6 +194,22 @@ namespace SocialNetworkAPI.Controllers
 
             return Ok();
         }
+
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("{id}/galeria")]
+        public async Task<ActionResult<IEnumerable<string>>> Galeria(int id)
+        {
+            var perfil = await _context.Perfis.FindAsync(id);
+
+            if (perfil == null)
+            {
+                return NotFound();
+            }
+
+            var galeria = await _ImageService.Galeria(perfil);
+
+            return galeria;
+        }
         
         // GET: api/Perfil/5
         [Authorize]

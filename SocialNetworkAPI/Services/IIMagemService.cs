@@ -11,5 +11,7 @@ namespace SocialNetworkAPI.Services
     {
         public Task<string> ImagemPerfil(IFormFile files, Perfil perfilLogado);
         public Task<string> ImagemPost(IFormFile files, Post post);
+        public Task<List<string>> Galeria(Perfil perfil);
+        
     }
 }
