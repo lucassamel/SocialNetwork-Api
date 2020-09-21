@@ -22,6 +22,6 @@ namespace SocialNetworkBLL.Models
         [JsonIgnore]
         public Usuario Usuario { get; set; }
 
-        public string LinkImagem { get; set; }
+        public string ImagemPerfil { get; set; }
     }
 }
