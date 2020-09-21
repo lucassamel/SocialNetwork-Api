@@ -103,6 +103,24 @@ namespace SocialNetworkAPI.Controllers
             return CreatedAtAction("GetPost", new { id = post.PostId }, post);
         }
 
+        [Microsoft.AspNetCore.Mvc.HttpPost("{id}/foto-post")]
+        public async Task<ActionResult<Post>> ImagemPost(IFormFile files, int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if(post == null)
+            {
+                return NotFound();
+            }
+
+            post.Imagem = await _ImageService.ImagemPost(files, post);
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
         // DELETE: api/Post/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Post>> DeletePost(int id)
