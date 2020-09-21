@@ -3,30 +3,50 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Files.DataLake;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using SocialNetworkBLL.Models;
+using SocialNetworkDLL;
 
 namespace SocialNetworkAPI.Controllers
-{
+{   
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ImgController : ControllerBase
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SocialNetworkContext _context;
         private readonly IConfiguration _configuration;
-        public ImgController(IConfiguration configuration)
+
+
+        public ImgController(IConfiguration configuration,
+            UserManager<IdentityUser> userManager,
+            SocialNetworkContext context)
         {
             _configuration = configuration;
+            _userManager = userManager;
+            _context = context;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(IFormFile files)
         {
-            string systemFileName = files.FileName;
-            string blobstorageconnection = _configuration.GetValue<string>("blobstorage");
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Perfis
+                .FirstAsync(p => p.Usuario.Email == account.Email);
+
+            string dir = perfilLogado.PerfilId.ToString() + "/";
+            string systemFileName = dir + files.FileName;
+            string blobstorageconnection = _configuration.GetValue<string>("blobstorage");           
+
 
             // Retrieve storage account from connection string.
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(blobstorageconnection);
@@ -36,6 +56,8 @@ namespace SocialNetworkAPI.Controllers
 
             // Retrieve a reference to a container.
             CloudBlobContainer container = blobClient.GetContainerReference("imagens");
+
+            container.GetDirectoryReference(dir);
 
             // This also does not make a service call; it only creates a local object.
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(systemFileName);
