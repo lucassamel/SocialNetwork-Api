@@ -21,15 +21,10 @@ namespace SocialNetworkAPI.Services
             _configuration = configuration;            
         }
 
-        public ImagemService(IFormFile files, Perfil perfil)
+        public ImagemService()
         {
-            ImagemPerfil(files, perfil);
-        }
-
-        public ImagemService(IFormFile files, Post post)
-        {
-            ImagemPost(files,post);
-        }
+            
+        }       
 
         public async Task<String> ImagemPerfil(IFormFile files, Perfil perfilLogado)
         {

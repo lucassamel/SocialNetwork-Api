@@ -62,9 +62,9 @@ namespace SocialNetworkAPI.Controllers
                 return BadRequest();
             }
 
-            var imgPost = new ImagemService(files,post);
+            var imagemService = new ImagemService();
 
-            post.Imagem = imgPost.ToString();
+            post.Imagem = imagemService.ImagemPost(files,post).ToString();
 
             _context.Entry(post).State = EntityState.Modified;
 

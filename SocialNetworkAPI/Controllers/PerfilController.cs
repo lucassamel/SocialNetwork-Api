@@ -62,9 +62,9 @@ namespace SocialNetworkAPI.Controllers
                 return BadRequest();
             }
 
-            var imgPerfil = new ImagemService(files,perfil);
+            var imagemService = new ImagemService();
 
-            perfil.ImagemPerfil = imgPerfil.ToString();
+            perfil.ImagemPerfil = imagemService.ImagemPerfil(files,perfil).ToString();
           
 
             _context.Entry(perfil).State = EntityState.Modified;
