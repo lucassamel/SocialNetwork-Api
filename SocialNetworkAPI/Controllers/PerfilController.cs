@@ -129,7 +129,7 @@ namespace SocialNetworkAPI.Controllers
             var perfil = await _context.Perfis
                 .Include(p => p.Seguindo)
                 .Include(p => p.Seguidores)
-                .FirstAsync(p =>p.PerfilId == id);
+                .FirstOrDefaultAsync(p =>p.PerfilId == id);
 
             if (perfil == null)
             {
@@ -146,13 +146,19 @@ namespace SocialNetworkAPI.Controllers
 
             if (perfilLogado.PerfilId == id)
             {
-                return perfilLogado;
+                return Ok(new 
+                {
+                    perfilSeguido = perfil, perfilLogado
+                });
             }
             
             // perfil ja seguiu entao nem precisa adionar
             if (perfilLogado.Seguindo != null && perfilLogado.Seguindo.Any(a => a.PerfilSeguido.PerfilId == id))
             {
-                return perfilLogado;
+                return Ok(new 
+                {
+                    perfilSeguido = perfil, perfilLogado
+                });
             }
             
             var novaAmizade = new Amizade
@@ -164,7 +170,10 @@ namespace SocialNetworkAPI.Controllers
             await _context.Amizades.AddAsync(novaAmizade);            
             await _context.SaveChangesAsync();
 
-            return perfilLogado;
+            return Ok(new 
+            {
+                perfilSeguido = perfil, perfilLogado
+            });
         }
         
         // GET: api/Perfil/5
@@ -178,10 +187,23 @@ namespace SocialNetworkAPI.Controllers
                 .Include(p => p.Seguindo)
                 .Include(p => p.Seguidores)
                 .FirstAsync(p => p.Usuario.Email == account.Email);
+            
+            var perfil = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
+                .FirstOrDefaultAsync(p =>p.PerfilId == id);
+
+            if (perfil == null)
+            {
+                return NotFound();
+            }
 
             if (perfilLogado.PerfilId == id)
             {
-                return perfilLogado;
+                return Ok(new 
+                {
+                    perfilSeguido = perfil, perfilLogado
+                });
             }
             
             var amizade = perfilLogado
@@ -190,13 +212,19 @@ namespace SocialNetworkAPI.Controllers
 
             if (amizade == null)
             {
-                return perfilLogado;    
+                return Ok(new 
+                {
+                    perfilSeguido = perfil, perfilLogado
+                }); 
             }
 
             _context.Amizades.Remove(amizade);
             await _context.SaveChangesAsync();
 
-            return perfilLogado;
+            return Ok(new 
+            {
+                perfilSeguido = perfil, perfilLogado
+            });
         }
     }
 }
