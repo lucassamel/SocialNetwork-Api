@@ -38,6 +38,8 @@ namespace SocialNetworkAPI.Controllers
         {
             var usuario = await _context.Usuarios
                 .Include(u => u.Perfil)
+                .Include(u => u.Perfil.Seguindo)
+                .Include(u => u.Perfil.Seguidores)
                 .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (usuario == null)
