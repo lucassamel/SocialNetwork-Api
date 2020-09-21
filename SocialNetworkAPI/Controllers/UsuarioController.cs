@@ -33,11 +33,12 @@ namespace SocialNetworkAPI.Controllers
 
         // GET: api/Usuario/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
             var usuario = await _context.Usuarios
                 .Include(u => u.Perfil)
-                .FirstAsync(u => u.UsuarioId == id);
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (usuario == null)
             {
