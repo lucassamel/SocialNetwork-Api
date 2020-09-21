@@ -15,6 +15,7 @@ namespace SocialNetworkBLL.Models
         public string Tipo { get; set; }
         public string Corpo { get; set; }
         public DateTime DataPost { get; set; }
+        public string Imagem { get; set; }
 
         [DefaultValue(0)]
         public int CountFato { get; set; }

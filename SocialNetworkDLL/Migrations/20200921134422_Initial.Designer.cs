@@ -10,8 +10,8 @@ using SocialNetworkDLL;
 namespace SocialNetworkDLL.Migrations
 {
     [DbContext(typeof(SocialNetworkContext))]
-    [Migration("20200921131658_init")]
-    partial class init
+    [Migration("20200921134422_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -299,6 +299,9 @@ namespace SocialNetworkDLL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImagemPerfil")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Privado")
                         .HasColumnType("bit");

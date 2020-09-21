@@ -298,6 +298,9 @@ namespace SocialNetworkDLL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ImagemPerfil")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Privado")
                         .HasColumnType("bit");
 
