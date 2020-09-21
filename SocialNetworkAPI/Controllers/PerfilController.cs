@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -129,6 +129,7 @@ namespace SocialNetworkAPI.Controllers
             {
                 return NotFound();
             }
+            
 
             var account = await _userManager.GetUserAsync(this.User);
 
@@ -137,6 +138,11 @@ namespace SocialNetworkAPI.Controllers
                 .Include(p => p.Seguidores)
                 .FirstAsync(p => p.Usuario.Email == account.Email);
 
+            if (perfilLogado.PerfilId == id)
+            {
+                return perfilLogado;
+            }
+            
             // perfil ja seguiu entao nem precisa adionar
             if (perfilLogado.Seguindo != null && perfilLogado.Seguindo.Any(a => a.PerfilSeguido.PerfilId == id))
             {
