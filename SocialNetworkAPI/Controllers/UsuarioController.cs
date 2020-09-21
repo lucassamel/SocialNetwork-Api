@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkBLL.Models;
@@ -17,10 +18,12 @@ namespace SocialNetworkAPI.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly SocialNetworkContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UsuarioController(SocialNetworkContext context)
+        public UsuarioController(SocialNetworkContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         //[AllowAnonymous]
@@ -47,6 +50,21 @@ namespace SocialNetworkAPI.Controllers
                 return NotFound();
             }
 
+            return usuario;
+        }
+        
+        [HttpGet("eu")]
+        [Authorize]
+        public async Task<ActionResult<Usuario>> Me()
+        {
+            var account = await _userManager.GetUserAsync(this.User);
+            
+            var usuario = await _context
+                .Usuarios
+                .Include(u => u.Perfil)
+                .Include(u => u.Perfil.Seguindo)
+                .Include(u => u.Perfil.Seguidores)
+                .FirstAsync(u => u.Email == account.Email);
             return usuario;
         }
 
