@@ -20,12 +20,15 @@ namespace SocialNetworkAPI.Controllers
     {
         private readonly SocialNetworkContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IIMagemService _ImageService;
 
         public PostController(SocialNetworkContext context,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IIMagemService imagemService)
         {
             _context = context;
             _signInManager = signInManager;
+            _ImageService = imagemService;
         }
 
         // GET: api/Post
@@ -60,11 +63,9 @@ namespace SocialNetworkAPI.Controllers
             if (id != post.PostId)
             {
                 return BadRequest();
-            }
+            }          
 
-            var imgPost = new ImagemService(files,post);
-
-            post.Imagem = imgPost.ToString();
+            post.Imagem = await _ImageService.ImagemPost(files,post);
 
             _context.Entry(post).State = EntityState.Modified;
 

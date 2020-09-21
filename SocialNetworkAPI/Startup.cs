@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkDLL;
 using Microsoft.AspNetCore.Identity;
+using SocialNetworkAPI.Services;
 
 namespace SocialNetworkAPI
 {
@@ -43,6 +44,8 @@ namespace SocialNetworkAPI
             services.AddControllers();
             
             services.AddCors();
+
+            services.AddScoped<IIMagemService, ImagemService>();
         }
 
         
