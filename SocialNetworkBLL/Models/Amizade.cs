@@ -13,10 +13,12 @@ namespace SocialNetworkBLL.Models
         public int AmizadeId { get; set; }
 
         [ForeignKey("Perfil")]
-        public int Usuario { get; set; }
+        public int PerfilUsuarioId { get; set; }
+        public Perfil PerfilUsuario { get; set; }
 
         [ForeignKey("Perfil")]
-        public int Amigo { get; set; }
+        public int PerfilAmigoId { get; set; }
+        public Perfil PerfilAmigo { get; set; }
 
     }
 }

@@ -11,7 +11,8 @@ namespace SocialNetworkBLL.Models
     {   
         [Key]
         public int PerfilId { get; set; }
-        public IEnumerable<Perfil> Amizades { get; set; }
+        
+        public ICollection<Perfil> Amizades { get; set; }
         public Boolean Privado { get; set; }
 
         [ForeignKey("Usuario")]
