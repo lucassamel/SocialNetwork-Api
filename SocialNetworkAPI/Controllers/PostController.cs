@@ -104,6 +104,28 @@ namespace SocialNetworkAPI.Controllers
             return CreatedAtAction("GetPost", new { id = post.PostId }, post);
         }
 
+        [HttpPost("{id}/fato")]
+        public async Task<ActionResult<Post>> Fato(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+            post.CountFato += 1;
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPost",post);
+        }
+
+        [HttpPost("{id}/fake")]
+        public async Task<ActionResult<Post>> Fake(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+            post.CountFake += 1;
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPost", post);
+        }
+
         [Microsoft.AspNetCore.Mvc.HttpPost("{id}/foto-post")]
         public async Task<ActionResult<Post>> ImagemPost(IFormFile files, int id)
         {
