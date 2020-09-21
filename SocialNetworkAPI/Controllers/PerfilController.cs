@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkAPI.Services;
 using SocialNetworkBLL.Models;
 using SocialNetworkDLL;
 
@@ -54,12 +55,17 @@ namespace SocialNetworkAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
-        public async Task<IActionResult> PutPerfil(int id, Perfil perfil)
+        public async Task<IActionResult> PutPerfil(int id, Perfil perfil,IFormFile files)
         {
             if (id != perfil.PerfilId)
             {
                 return BadRequest();
             }
+
+            var imgPerfil = new ImagemService(files,perfil);
+
+            perfil.ImagemPerfil = imgPerfil.ToString();
+          
 
             _context.Entry(perfil).State = EntityState.Modified;
 
