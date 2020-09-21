@@ -21,14 +21,18 @@ namespace SocialNetworkAPI.Controllers
         private readonly SocialNetworkContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IIMagemService _ImageService;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public PostController(SocialNetworkContext context,
             SignInManager<IdentityUser> signInManager,
-            IIMagemService imagemService)
+            IIMagemService imagemService,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _signInManager = signInManager;
             _ImageService = imagemService;
+            _userManager = userManager;
+
         }
 
         // GET: api/Post
@@ -93,10 +97,13 @@ namespace SocialNetworkAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post, int id, IFormFile files)
+        public async Task<ActionResult<Post>> PostPost(Post post)
         {
-            post.Imagem = await _ImageService.ImagemPost(files, post);
-            post.PerfilId = id;
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Perfis
+                .FirstAsync(p => p.Usuario.Email == account.Email);
+
+            post.PerfilId = perfilLogado.PerfilId;
             post.DataPost = DateTime.Now;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();            
