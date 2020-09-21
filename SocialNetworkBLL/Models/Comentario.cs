@@ -16,8 +16,8 @@ namespace SocialNetworkBLL.Models
         [ForeignKey("Post")]
         public int PostId { get; set; }
         public Post Post { get; set; }
-
-        [ForeignKey("Perfil")]
+        
+        // sem anotação pq esta sendo definido manualmente no context
         public int PerfilId { get; set; }
         public Perfil Perfil { get; set; }
     }

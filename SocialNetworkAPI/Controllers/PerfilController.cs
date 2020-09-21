@@ -37,7 +37,10 @@ namespace SocialNetworkAPI.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
         public async Task<ActionResult<Perfil>> GetPerfil(int id)
         {
-            var perfil = await _context.Perfis.FindAsync(id);
+            var perfil = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
+                .FirstAsync(p => p.PerfilId == id);
 
             if (perfil == null)
             {
@@ -118,7 +121,8 @@ namespace SocialNetworkAPI.Controllers
         public async Task<ActionResult<Perfil>> Seguir(int id)
         {
             var perfil = await _context.Perfis
-                .Include(p => p.Amizades)
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
                 .FirstAsync(p =>p.PerfilId == id);
 
             if (perfil == null)
@@ -129,14 +133,22 @@ namespace SocialNetworkAPI.Controllers
             var account = await _userManager.GetUserAsync(this.User);
 
             var perfilLogado = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
                 .FirstAsync(p => p.Usuario.Email == account.Email);
 
+            // perfil ja seguiu entao nem precisa adionar
+            if (perfilLogado.Seguindo != null && perfilLogado.Seguindo.Any(a => a.PerfilSeguido.PerfilId == id))
+            {
+                return perfilLogado;
+            }
+            
             var novaAmizade = new Amizade
             {
-                PerfilUsuario = perfilLogado,
-                PerfilAmigo = perfil,
+                Perfil = perfilLogado,
+                PerfilSeguido = perfil,
             };
-
+            
             await _context.Amizades.AddAsync(novaAmizade);            
             await _context.SaveChangesAsync();
 

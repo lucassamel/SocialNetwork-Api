@@ -108,8 +108,10 @@ namespace SocialNetworkAPI.Controllers
 
             var usuario = _context.Usuarios
                 .Include(u =>u.Perfil)
-                .Include(u => u.Perfil.Amizades)
+                .Include(u => u.Perfil.Seguindo)
+                .Include(u => u.Perfil.Seguidores)
                 .Single(u => u.Email == model.Email);
+            
 
             return Ok(usuario);
         }

@@ -38,5 +38,34 @@ namespace SocialNetworkDLL
                 return new SocialNetworkContext(builder.Options);
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            
+            builder.Entity<Amizade>()
+                .HasOne(e => e.Perfil)
+                .WithMany(e => e.Seguindo)
+                .HasForeignKey(e => e.PerfilId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            builder.Entity<Amizade>()
+                .HasOne(e => e.PerfilSeguido)
+                .WithMany(e => e.Seguidores)
+                .HasForeignKey(e => e.PerfilSeguidoId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            
+            // corrige o erro de cascade
+            // pq o comentario ja seria deletado pelo post
+            builder.Entity<Comentario>()
+                .HasOne(e => e.Perfil)
+                .WithMany()
+                .HasForeignKey(e => e.PerfilId)
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired();
+        }
     }
+    
+    
 }
