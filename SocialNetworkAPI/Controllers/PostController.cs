@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using SocialNetworkAPI.Services;
 using SocialNetworkBLL.Models;
 using SocialNetworkDLL;
+using SQLitePCL;
 
 namespace SocialNetworkAPI.Controllers
 {
@@ -40,7 +41,36 @@ namespace SocialNetworkAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
+            //var x = from w in _context.Posts
+            //        select new Post
+            //        {
+            //            Corpo = w.Corpo,
+            //            Comentarios = w.Comentarios.ToList(),
+            //            CountFake = w.CountFake,
+            //            CountFato = w.CountFato,
+            //            DataPost = w.DataPost,
+            //            Imagem = w.Imagem,
+            //            Perfil = w.Perfil,
+            //            PerfilId = w.PerfilId,
+            //            PostId = w.PostId,
+
+            //        };
+
+            //var posts = _context.Posts.ToList().AsTracking<Comentario>();
+            //foreach (var post in posts)
+            //{
+            //    post.Comentarios = 
+            //}
+
+            //return await/* x.ToListAsync()*/;
+
+            return await _context.Posts.               
+                Include(p => p.Perfil).
+                Include(p => p.Perfil.Usuario).
+                Include(p => p.Comentarios).
+                ThenInclude(c => c.Perfil).
+                Include(c => c.Perfil.Usuario)
+                .ToListAsync();
         }
 
         // GET: api/Post/5
@@ -106,16 +136,28 @@ namespace SocialNetworkAPI.Controllers
             post.PerfilId = perfilLogado.PerfilId;
             post.DataPost = DateTime.Now;
             _context.Posts.Add(post);
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.PostId }, post);
+            //var teste = _context.Comentarios.
+            //     Include(p => p.ComentarioId);
+                
+
+            return CreatedAtAction("GetPost", new { id = post.PostId }, post );
         }
 
         [HttpPost("{id}/fato")]
         public async Task<ActionResult<Post>> Fato(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+                var post = await _context.Posts.
+                Include(p => p.Perfil).
+                Include(p => p.Perfil.Usuario).
+                Include(p => p.Comentarios).
+                ThenInclude(c => c.Perfil).
+                Include(c => c.Perfil.Usuario)
+                .SingleAsync(p => p.PostId == id);
+
             post.CountFato += 1;
+
 
             await _context.SaveChangesAsync();
 

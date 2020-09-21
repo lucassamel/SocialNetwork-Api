@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SocialNetworkBLL.Models
 {
@@ -26,7 +27,7 @@ namespace SocialNetworkBLL.Models
         public DateTime? Aniversario { get; set; }
         
         public string Localidade { get; set; }
-        
+        [JsonIgnore]
         public Perfil Perfil { get; set; }
     }
 }

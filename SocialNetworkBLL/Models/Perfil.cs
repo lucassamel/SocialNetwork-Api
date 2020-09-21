@@ -19,7 +19,7 @@ namespace SocialNetworkBLL.Models
 
         [ForeignKey("Usuario")]
         public int UserId { get; set; }
-        [JsonIgnore]
+        
         public Usuario Usuario { get; set; }
 
         public string ImagemPerfil { get; set; }

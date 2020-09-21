@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkBLL.Models;
@@ -17,10 +18,14 @@ namespace SocialNetworkAPI.Controllers
     public class ComentarioController : ControllerBase
     {
         private readonly SocialNetworkContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ComentarioController(SocialNetworkContext context)
+        public ComentarioController(SocialNetworkContext context,
+            UserManager<IdentityUser> userManager
+            )
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Comentario
@@ -82,7 +87,15 @@ namespace SocialNetworkAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Comentario>> PostComentario(Comentario comentario)
         {
+            var account = await _userManager.GetUserAsync(this.User);
+
+            var perfilLogado = await _context.Perfis
+                .Include(p => p.Seguindo)
+                .Include(p => p.Seguidores)
+                .FirstAsync(p => p.Usuario.Email == account.Email);
+
             _context.Comentarios.Add(comentario);
+            comentario.Data = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetComentario", new { id = comentario.ComentarioId }, comentario);
